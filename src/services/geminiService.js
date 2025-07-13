@@ -1,3 +1,60 @@
+// // src/services/geminiService.js (Enhanced with queue debugging)
+// const { GoogleGenerativeAI } = require('@google/generative-ai');
+// const Bull = require('bull');
+// const { Message } = require('../models');
+
+// // Debug API key
+// console.log('🔧 Gemini Service Initializing...');
+// console.log('API Key loaded:', process.env.GEMINI_API_KEY ? 'YES' : 'NO');
+// console.log('API Key length:', process.env.GEMINI_API_KEY?.length || 0);
+// console.log('Redis Host:', process.env.REDIS_HOST || 'localhost');
+// console.log('Redis Port:', process.env.REDIS_PORT || 6379);
+
+// // Initialize Gemini AI with the correct model name
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// // Try different model names - Google has updated them
+// let model;
+// let modelName = 'unknown';
+// try {
+//   // Try the new model name first
+//   model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+//   modelName = "gemini-1.5-flash";
+//   console.log('✅ Using model: gemini-1.5-flash');
+// } catch (error) {
+//   try {
+//     // Fallback to gemini-1.5-pro
+//     model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+//     modelName = "gemini-1.5-pro";
+//     console.log('✅ Using model: gemini-1.5-pro');
+//   } catch (error2) {
+//     try {
+//       // Last fallback
+//       model = genAI.getGenerativeModel({ model: "gemini-pro" });
+//       modelName = "gemini-pro";
+//       console.log('✅ Using model: gemini-pro');
+//     } catch (error3) {
+//       console.error('❌ Failed to initialize any Gemini model');
+//     }
+//   }
+// }
+
+// // Create Bull queue with enhanced debugging
+// console.log('🔧 Initializing Bull queue...');
+// // Enhanced configuration for Vercel
+// const getRedisConfig = () => {
+//   if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
+//     console.log('🔧 Using REDIS_URL for production/Vercel');
+//     return process.env.REDIS_URL;  // Use REDIS_URL instead of REDIS_PUBLIC_URL
+//   } else {
+//     console.log('🔧 Using localhost Redis for development');
+//     return {
+//       host: process.env.REDIS_HOST || 'localhost',
+//       port: process.env.REDIS_PORT || 6379
+//     };
+//   }
+// };
+
 // src/services/geminiService.js (Enhanced with queue debugging)
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const Bull = require('bull');
@@ -41,11 +98,11 @@ try {
 
 // Create Bull queue with enhanced debugging
 console.log('🔧 Initializing Bull queue...');
-// Enhanced configuration for Vercel
+// Enhanced configuration
 const getRedisConfig = () => {
-  if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
-    console.log('🔧 Using REDIS_URL for production/Vercel');
-    return process.env.REDIS_URL;  // Use REDIS_URL instead of REDIS_PUBLIC_URL
+  if (process.env.NODE_ENV === 'production' || process.env.REDIS_PUBLIC_URL) {
+    console.log('🔧 Using REDIS_PUBLIC_URL for production/Railway');
+    return process.env.REDIS_PUBLIC_URL;  // Just return the URL string
   } else {
     console.log('🔧 Using localhost Redis for development');
     return {
