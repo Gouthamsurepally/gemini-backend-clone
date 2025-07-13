@@ -7,6 +7,11 @@ const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
+    // Add debugging for Railway
+    console.log('🔧 PORT environment variable:', process.env.PORT);
+    console.log('🔧 Using PORT:', PORT);
+    console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
+
     // Test database connection
     await sequelize.authenticate();
     console.log('✅ Database connected successfully');
@@ -18,10 +23,11 @@ const startServer = async () => {
     });
     console.log('✅ Database models synced');
 
-    // Start the server
-    app.listen(PORT, () => {
+    // Start the server - IMPORTANT: Bind to 0.0.0.0 for Railway
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📖 API Documentation: http://localhost:${PORT}/health`);
+      console.log(`📖 Health endpoint: /health`);
+      console.log(`🌐 Public URL: https://gemini-backend-clone-production.up.railway.app`);
       console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 
