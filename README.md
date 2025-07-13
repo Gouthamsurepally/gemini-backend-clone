@@ -4,7 +4,7 @@ A comprehensive backend system built with Node.js, Express, PostgreSQL, and Redi
 
 ## 🚀 Live Deployment
 
-**Production URL:** `https://your-railway-url.railway.app`
+**Production URL:** `https://gemini-backend-clone-production.up.railway.app/`
 
 **API Documentation:** All endpoints are documented in the included Postman collection.
 
@@ -99,7 +99,7 @@ A comprehensive backend system built with Node.js, Express, PostgreSQL, and Redi
 ### Local Development
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/gemini-backend-clone.git
+git clone https://github.com/Gouthamsurepally/gemini-backend-clone.git
 cd gemini-backend-clone
 
 # Install dependencies
@@ -147,7 +147,7 @@ OTP SMS is currently mocked for assignment purposes. The OTP is returned in the 
 4. **Monitoring:** Railway provides built-in monitoring and logs
 
 ### Production URL
-`https://your-railway-url.railway.app`
+`https://gemini-backend-clone-production.up.railway.app/`
 
 ## 📊 Key Implementation Details
 
@@ -220,7 +220,7 @@ This implementation fulfills all requirements from the Kuvaka Tech assignment:
 **Assignment Submission for Kuvaka Tech Backend Developer Position**
 
 - **GitHub:** https://github.com/YOUR_USERNAME/gemini-backend-clone
-- **Live Demo:** https://your-railway-url.railway.app  
+- **Live Demo:** https://gemini-backend-clone-production.up.railway.app/  
 - **Postman Collection:** Included in repository
 
 ---
