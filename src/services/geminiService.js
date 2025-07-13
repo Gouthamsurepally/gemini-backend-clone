@@ -42,12 +42,9 @@ try {
 // Create Bull queue with enhanced debugging
 console.log('🔧 Initializing Bull queue...');
 const geminiQueue = new Bull('gemini processing', {
-  redis: {
+  redis: process.env.REDIS_URL || {
     host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
-    retryDelayOnFailover: 100,
-    enableReadyCheck: false,
-    maxRetriesPerRequest: 3,
+    port: process.env.REDIS_PORT || 6379
   },
   defaultJobOptions: {
     removeOnComplete: 10,

@@ -1,38 +1,24 @@
-// src/services/cacheService.js - Production Ready
+// src/services/cacheService.js - FIXED VERSION
 const redis = require('redis');
 
 let client;
 
-// Create Redis client based on environment
 if (process.env.REDIS_URL) {
   // Railway provides REDIS_URL
-  console.log('🔗 Using REDIS_URL for connection');
+  console.log('🔗 Using REDIS_URL for Railway connection');
   client = redis.createClient({
     url: process.env.REDIS_URL,
     socket: {
-      tls: process.env.NODE_ENV === 'production',
+      tls: true,
       rejectUnauthorized: false
     }
   });
 } else {
-  // Fallback to individual environment variables
-  console.log('🔗 Using individual Redis environment variables');
+  // Fallback for local development
+  console.log('🔗 Using localhost Redis for development');
   client = redis.createClient({
     host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
-    retry_strategy: (options) => {
-      if (options.error && options.error.code === 'ECONNREFUSED') {
-        console.error('Redis server refused connection');
-        return new Error('Redis server refused connection');
-      }
-      if (options.total_retry_time > 1000 * 60 * 60) {
-        return new Error('Redis retry time exhausted');
-      }
-      if (options.attempt > 10) {
-        return undefined;
-      }
-      return Math.min(options.attempt * 100, 3000);
-    }
+    port: process.env.REDIS_PORT || 6379
   });
 }
 
@@ -42,10 +28,6 @@ client.on('connect', () => {
 
 client.on('error', (err) => {
   console.error('❌ Redis error:', err);
-});
-
-client.on('ready', () => {
-  console.log('🚀 Redis client ready');
 });
 
 // Connect to Redis
