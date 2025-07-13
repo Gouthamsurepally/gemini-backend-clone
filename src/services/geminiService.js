@@ -41,11 +41,11 @@ try {
 
 // Create Bull queue with enhanced debugging
 console.log('🔧 Initializing Bull queue...');
-// Enhanced configuration
+// Enhanced configuration for Vercel
 const getRedisConfig = () => {
-  if (process.env.NODE_ENV === 'production' || process.env.REDIS_PUBLIC_URL) {
-    console.log('🔧 Using REDIS_PUBLIC_URL for production/Railway');
-    return process.env.REDIS_PUBLIC_URL;  // Just return the URL string
+  if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
+    console.log('🔧 Using REDIS_URL for production/Vercel');
+    return process.env.REDIS_URL;  // Use REDIS_URL instead of REDIS_PUBLIC_URL
   } else {
     console.log('🔧 Using localhost Redis for development');
     return {

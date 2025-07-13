@@ -7,10 +7,11 @@ const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
-    // Add debugging for Railway
+    // Debug logging for Vercel
     console.log('🔧 PORT environment variable:', process.env.PORT);
     console.log('🔧 Using PORT:', PORT);
     console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
+    console.log('🔧 Platform: Vercel Serverless');
 
     // Test database connection
     await sequelize.authenticate();
@@ -23,11 +24,11 @@ const startServer = async () => {
     });
     console.log('✅ Database models synced');
 
-    // Start the server - IMPORTANT: Bind to 0.0.0.0 for Railway
-    app.listen(PORT, '0.0.0.0', () => {
+    // Start the server - Remove 0.0.0.0 binding for Vercel
+    app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📖 Health endpoint: /health`);
-      console.log(`🌐 Public URL: https://gemini-backend-clone-production.up.railway.app`);
+      console.log(`🌐 Platform: Vercel Serverless`);
       console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 

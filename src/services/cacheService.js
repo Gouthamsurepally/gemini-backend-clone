@@ -1,18 +1,18 @@
-// src/services/cacheService.js - FIXED VERSION
+// src/services/cacheService.js - FIXED VERSION FOR VERCEL
 const redis = require('redis');
 
 let client;
 
-if (process.env.REDIS_PUBLIC_URL) {
-  console.log('🔗 Using REDIS_PUBLIC_URL for Railway connection');
-  console.log('🔧 REDIS_PUBLIC_URL found:', process.env.REDIS_PUBLIC_URL ? 'YES' : 'NO');
-  console.log('🔧 REDIS_PUBLIC_URL preview:', process.env.REDIS_PUBLIC_URL?.substring(0, 20) + '...');
+if (process.env.REDIS_URL) {
+  console.log('🔗 Using REDIS_URL for Vercel connection');
+  console.log('🔧 REDIS_URL found:', process.env.REDIS_URL ? 'YES' : 'NO');
+  console.log('🔧 REDIS_URL preview:', process.env.REDIS_URL?.substring(0, 20) + '...');
   
   // Check if URL uses TLS (rediss://) or not (redis://)
-  const usesTLS = process.env.REDIS_PUBLIC_URL.startsWith('rediss://');
+  const usesTLS = process.env.REDIS_URL.startsWith('rediss://');
   
   client = redis.createClient({
-    url: process.env.REDIS_PUBLIC_URL,
+    url: process.env.REDIS_URL,
     socket: usesTLS ? {
       tls: true,
       rejectUnauthorized: false
@@ -25,6 +25,7 @@ if (process.env.REDIS_PUBLIC_URL) {
     port: process.env.REDIS_PORT || 6379
   });
 }
+
 client.on('connect', () => {
   console.log('✅ Connected to Redis');
 });
