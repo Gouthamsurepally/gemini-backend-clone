@@ -3,11 +3,11 @@ const redis = require('redis');
 
 let client;
 
-if (process.env.REDIS_URL) {
-  // Railway provides REDIS_URL
-  console.log('🔗 Using REDIS_URL for Railway connection');
+if (process.env.REDIS_PUBLIC_URL) {
+  // Railway provides REDIS_PUBLIC_URL
+  console.log('🔗 Using REDIS_PUBLIC_URL for Railway connection');
   client = redis.createClient({
-    url: process.env.REDIS_URL,
+    url: process.env.REDIS_PUBLIC_URL,
     socket: {
       tls: true,
       rejectUnauthorized: false

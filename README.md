@@ -121,7 +121,7 @@ JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_gemini_api_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 DATABASE_URL=your_database_url
-REDIS_URL=your_redis_url
+REDIS_PUBLIC_URL=your_REDIS_PUBLIC_URL
 ```
 
 ## 🧪 Testing
