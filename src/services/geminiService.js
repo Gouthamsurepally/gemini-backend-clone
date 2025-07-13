@@ -41,11 +41,22 @@ try {
 
 // Create Bull queue with enhanced debugging
 console.log('🔧 Initializing Bull queue...');
+// Enhanced configuration
+const getRedisConfig = () => {
+  if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
+    console.log('🔧 Using REDIS_URL for production/Railway');
+    return process.env.REDIS_URL;
+  } else {
+    console.log('🔧 Using localhost Redis for development');
+    return {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT || 6379
+    };
+  }
+};
+
 const geminiQueue = new Bull('gemini processing', {
-  redis: process.env.REDIS_URL || {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379
-  },
+  redis: getRedisConfig(),
   defaultJobOptions: {
     removeOnComplete: 10,
     removeOnFail: 50,
