@@ -45,7 +45,7 @@ console.log('🔧 Initializing Bull queue...');
 const getRedisConfig = () => {
   if (process.env.NODE_ENV === 'production' || process.env.REDIS_PUBLIC_URL) {
     console.log('🔧 Using REDIS_PUBLIC_URL for production/Railway');
-    return process.env.REDIS_PUBLIC_URL;
+    return process.env.REDIS_PUBLIC_URL;  // Just return the URL string
   } else {
     console.log('🔧 Using localhost Redis for development');
     return {

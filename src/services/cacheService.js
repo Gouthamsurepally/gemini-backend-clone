@@ -4,21 +4,22 @@ const redis = require('redis');
 let client;
 
 if (process.env.REDIS_PUBLIC_URL) {
-  // Railway provides REDIS_PUBLIC_URL
   console.log('🔗 Using REDIS_PUBLIC_URL for Railway connection');
   console.log('🔧 REDIS_PUBLIC_URL found:', process.env.REDIS_PUBLIC_URL ? 'YES' : 'NO');
   console.log('🔧 REDIS_PUBLIC_URL preview:', process.env.REDIS_PUBLIC_URL?.substring(0, 20) + '...');
   
+  // Check if URL uses TLS (rediss://) or not (redis://)
+  const usesTLS = process.env.REDIS_PUBLIC_URL.startsWith('rediss://');
+  
   client = redis.createClient({
     url: process.env.REDIS_PUBLIC_URL,
-    socket: {
+    socket: usesTLS ? {
       tls: true,
       rejectUnauthorized: false
-    }
+    } : undefined  // Don't set socket options for non-TLS
   });
 } else {
   console.log('🔗 Using localhost Redis for development');
-  console.log('🔧 REDIS_PUBLIC_URL not found, falling back to localhost');
   client = redis.createClient({
     host: process.env.REDIS_HOST || 'localhost',
     port: process.env.REDIS_PORT || 6379
