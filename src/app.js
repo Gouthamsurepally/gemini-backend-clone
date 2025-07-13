@@ -15,6 +15,13 @@ app.use(cors());
 // Request logging
 app.use(morgan('combined'));
 
+// DEBUG: Add request logging to see if requests are reaching the app
+app.use((req, res, next) => {
+  console.log(`📥 Incoming request: ${req.method} ${req.url} from ${req.ip}`);
+  console.log(`📋 Headers:`, req.headers);
+  next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -35,13 +42,49 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Raw body for Stripe webhooks
 // app.use('/webhook/stripe', express.raw({ type: 'application/json' }));
 
+// Health check endpoint - MOVED TO TOP for easier access
+app.get('/health', (req, res) => {
+  console.log('🏥 Health endpoint hit!');
+  console.log('🔧 Request details:', {
+    method: req.method,
+    url: req.url,
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
+  });
+  
+  res.json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    port: process.env.PORT || 3000
+  });
+});
+
+// Base route for testing
+app.get('/', (req, res) => {
+  console.log('🏠 Base route hit!');
+  res.json({
+    success: true,
+    message: 'Gemini Backend Clone API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/auth/*',
+      user: '/user/*',
+      chatroom: '/chatroom/*',
+      subscription: '/subscription/*',
+      debug: '/debug/*'
+    }
+  });
+});
+
 // Routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const chatroomRoutes = require('./routes/chatroom');
 const subscriptionRoutes = require('./routes/subscription');
 const debugRoutes = require('./routes/debug');
-
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
@@ -54,26 +97,20 @@ app.use('/debug', debugRoutes);
 const { handleWebhook } = require('./controllers/subscriptionController');
 app.post('/webhook/stripe', handleWebhook);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
-
 // 404 handler
 app.use('*', (req, res) => {
+  console.log(`❌ 404 - Route not found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not found',
+    requestedUrl: req.originalUrl,
+    method: req.method
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('❌ Error occurred:', err.stack);
   res.status(500).json({
     success: false,
     message: 'Something went wrong!',
